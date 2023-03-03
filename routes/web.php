@@ -76,6 +76,9 @@ Route::group(['middleware' => ['auth'] ], function () {
     //Type Packaging
     Route::resource('TypePackaging','TypePackagingController');
 
+    //Services
+    Route::resource('service','ServiceController');
+
 
     //Type Frais
     Route::resource('TypeFrais','TypeFraisController');

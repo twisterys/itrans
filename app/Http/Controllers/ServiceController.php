@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTypePackaging;
-use App\TypePackaging;
+use App\Http\Requests\StoreServiceRequest;
+use App\Service;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
-class TypePackagingController extends Controller
+class ServiceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +17,7 @@ class TypePackagingController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = TypePackaging::get();
+            $data = Service::get();
 
             $table = Datatables::of($data);
 
@@ -26,25 +26,30 @@ class TypePackagingController extends Controller
 
             $table->editColumn('actions', function ($row) {
 
-                $editLink = route('TypePackaging.edit',$row->id);
+                $editLink = route('service.edit',$row->id);
                 $btn = '<a href="'.$editLink.'" class="btn btn-warning btn-sm mr-1">Modifier</a>';
-                $btn .= '<button onclick="deleteTypePackaging('.$row->id.')" class="btn btn-danger btn-sm mr-1">Supprimer</button>';
-
+                $btn .= '<button onclick="deleteService('.$row->id.')" class="btn btn-danger btn-sm mr-1">Supprimer</button>';
                 return $btn;
             });
 
             $table->editColumn('id', function ($row) {
                 return $row->id ? $row->id : '';
             });
-            $table->editColumn('name', function ($row) {
-                return $row->name ? $row->name : '';
+            $table->editColumn('service', function ($row) {
+                return $row->service ? $row->service : '';
+            });
+            $table->editColumn('service_price', function ($row) {
+                return $row->service_price ? $row->service_price : '';
+            });
+            $table->editColumn('service_comment', function($row){
+                return $row->service_comment ? $row->service_comment: '';
             });
 
-            $table->rawColumns(['active','actions', 'placeholder']);
+            $table->rawColumns(['actions', 'placeholder']);
 
             return $table->make(true);
         }
-        return view('packagingType.index');
+        return view('service.index');
     }
 
     /**
@@ -54,7 +59,7 @@ class TypePackagingController extends Controller
      */
     public function create()
     {
-        return view('packagingType.create');
+        return view('service.create');
     }
 
     /**
@@ -63,19 +68,19 @@ class TypePackagingController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTypePackaging $request)
+    public function store(StoreServiceRequest $request)
     {
-        TypePackaging::create($request->all());
-        return redirect()->route('TypePackaging.index')->with('message','Ce Type est enregistré avec sucées');
+        Service::create($request->all());
+        return redirect()->route('service.index')->with('message','Prestation ajouté avec succées');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Service $service)
     {
         //
     }
@@ -83,44 +88,44 @@ class TypePackagingController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function edit(TypePackaging $TypePackaging)
+    public function edit(Service $service)
     {
-        return view('packagingType.edit',compact('TypePackaging'));
+        return view('service.edit',compact('service'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TypePackaging $TypePackaging)
+    public function update(StoreServiceRequest $request, Service $service)
     {
-        $TypePackaging->update($request->all());
-        return back()->with('message','Type est modifié avec succées');
+        $service->update($request->all());
+        return back()->with('message','Prestation est modifié avec succées');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function destroy($typePackaging)
+    public function destroy(Service $service)
     {
-        $p = TypePackaging::findOrFail($typePackaging)->delete();
-        if($p){
+        $s = $service->delete();
+        if($s){
             return response()->json([
-                'message' => 'Ce type de emballage est supprimé avec succées',
+                'message' => 'Prestation est supprimé avec succées',
                 'success' => true
             ]);
         }else{
             return response()->json([
-                'message' => "Un erreurs s'est passé, refaire cette action aprés",
+                'message' => "Un erreurs, refaire cette action aprés",
                 'success' => false
             ]);
         }
