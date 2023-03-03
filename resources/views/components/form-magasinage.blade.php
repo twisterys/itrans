@@ -106,11 +106,11 @@
                 <div class="col-md-9">
                     <select name="plomos[]" class="select2 form-control select2-multiple " multiple="multiple" data-placeholder="Choisir ...">
                             @foreach ($plomos as $plomo)
-                                
+
                                 <option value="{{$plomo->id}}" {{ in_array($plomo->id, old('plomos', [])) || ($magasinage ? $magasinage->plomos->contains($plomo->id) : null) ? 'selected' : '' }}>{{$plomo->num_serie}}</option>
-                                
+
                             @endforeach
-                    
+
                     </select>
             </div>
         </div>
@@ -128,7 +128,7 @@
             </div>
         </div>
     </div>
-    
+
     {{-- <div class="col-6">
         <div class="card border border-info"">
             <div class="card-header bg-info text-white ">
@@ -146,7 +146,7 @@
                         @endif
                     </div>
                 </div>
-            
+
                     <span id="error-dropzone"></span>
                     <div class="form-group" >
                         <div class="needsclick dropzone {{ $errors->has('file') ? 'is-invalid' : '' }}" id="docdropzone">
@@ -158,7 +158,7 @@
                         @endif
                     </div>
                     <span class="help-block"></span>
-                
+
             </div>
         </div>
     </div> --}}

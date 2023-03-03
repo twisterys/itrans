@@ -128,6 +128,7 @@
                                       <a  class="dropdown-item" href="{{route('generalFrais.index')}}">Global Frais</a>
                                       <a  class="dropdown-item" href="{{route('TypeFrais.index')}}">Types de Frais</a>
                                       <a  class="dropdown-item" href="{{route('TypeVehicle.index')}}">Types de Véhicules</a>
+                                      <a  class="dropdown-item" href="{{route('TypePackaging.index')}}">Types de Emballages</a>
                                       <a  class="dropdown-item" href="{{route('station.index')}}">Stations</a>
                                       <a  class="dropdown-item" href="{{route('depot.index')}}">Depots</a>
                                       <a class="dropdown-item" href="{{ route('assuranceMarchandise.index') }}">Assurance Marchandise</a>

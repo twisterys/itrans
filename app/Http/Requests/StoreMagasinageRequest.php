@@ -33,7 +33,7 @@ class StoreMagasinageRequest extends FormRequest
             'prix'  => 'required',
             'user_id' => 'required',
             'num_bon' => 'required',
-            
+
         ];
     }
 }

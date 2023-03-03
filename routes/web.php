@@ -73,6 +73,9 @@ Route::group(['middleware' => ['auth'] ], function () {
     //Type Vehicule
     Route::resource('TypeVehicle','TypeVehicleController');
 
+    //Type Packaging
+    Route::resource('TypePackaging','TypePackagingController');
+
 
     //Type Frais
     Route::resource('TypeFrais','TypeFraisController');
