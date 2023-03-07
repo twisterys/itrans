@@ -16,7 +16,6 @@
          @slot('li_1') Tables  @endslot
      @endcomponent
 
-
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
@@ -27,7 +26,7 @@
 
                                     <form method="POST" action="{{route('magasinage.store')}}" autocomplete="off" enctype="multipart/form-data">
                                         @csrf
-                                        <x-form-magasinage :magasinage=null :depots="$depots" :plomos="$plomos" :clients="$clients">Ajouter</x-form-magasinage>
+                                        <x-form-magasinage :magasinage=null :depots="$depots" :plomos="$plomos" :clients="$clients" :packages="$packages" :services="$services" :magasinageServices=null :magasinageService=null>Ajouter</x-form-magasinage>
                                     </form>
 
                                 </div>
@@ -41,6 +40,65 @@
 
 @section('script')
 
+    <script>
+        $(document).on('click', '.btn_add_row', function()
+        {
+            cloneRow('item_table');
+
+        });
+        $(document).on('click', '.delete_row', function(){
+            $(this).parents('tr').remove();
+        });
+
+
+        var count = "1";
+        var c = 1;
+        function cloneRow(in_tbl_name)
+        {
+            var tbody = document.getElementById(in_tbl_name).getElementsByTagName("tbody")[0];
+            // create row
+            var row = document.createElement("tr");
+            // create table cell 1
+            var td1 = document.createElement("td");
+            var strHtml1 = '<span class="btn btn-danger btn-sm btn-xs delete_row"><i class="fa fa-minus"></i><input type="hidden" name="item_id" id="item_id" value=""><input type="hidden"  value="{{ null }}"></span>';
+            td1.innerHTML = strHtml1.replace(/!count!/g,count);
+
+            var td3 = document.createElement("td");
+            var strHtml3 = '<select class="custom-select {{ $errors->has('service_id') ? 'is-invalid' : '' }}" name="service_id[]" id="service_id" required>      @foreach($services as $key => $label)        <option value="{{ $label->id }}">{{ $label->name }}</option>    @endforeach</select></div>';
+            td3.innerHTML = strHtml3.replace(/!count!/g,count);
+
+            var td4 = document.createElement("td");
+            var strHtml4 = '<input type="hidden"  "><input class="form-control {{ $errors->has('price') ? 'is-invalid' : '' }}" type="number" name="price[]" id="price" value="" step=0.01>';
+            td4.innerHTML = strHtml4.replace(/!count!/g,count);
+
+            var td5 = document.createElement("td");
+            var strHtml5 = '<input type="hidden"  "><input class="form-control {{ $errors->has('comment') ? 'is-invalid' : '' }}" type="text" name="comment[]" id="comment" value="">';
+            td5.innerHTML = strHtml5.replace(/!count!/g,count);
+
+            var td6 = document.createElement("td");
+            var strHtml6 = '';
+            td6.innerHTML = strHtml6.replace(/!count!/g,count);
+
+            // append data to row
+            row.appendChild(td1);
+
+            row.appendChild(td3);
+
+            row.appendChild(td4);
+
+            row.appendChild(td5);
+
+            row.appendChild(td6);
+
+
+            // add to count variable
+            count = parseInt(count) + 1;
+            // append row to table
+            tbody.appendChild(row);
+            row.className = 'item';
+        }
+
+    </script>
     <!-- Required datatable js -->
     <script src="{{ asset('libs/bootstrap-colorpicker/bootstrap-colorpicker.min.js')}}"></script>
     <script src="{{ asset('libs/bootstrap-touchspin/bootstrap-touchspin.min.js')}}"></script>

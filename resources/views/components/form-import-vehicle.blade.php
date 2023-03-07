@@ -13,7 +13,6 @@
     </thead>
 <tbody>
     @foreach (old('type_vehicle',$importVehicle ? $importVehicle->dossierVehicles : []) as $index => $oldVehicle)
-
     <tr class="item">
         <input type="hidden" name="IdVehicle[]" value="{{old('IdVehicle') ? old('IdVehicle')[$index] : ($importVehicle ? $oldVehicle->id : null) }}">
         <td><span class="btn btn-danger btn-sm btn-xs delete_row"><i class="fa fa-minus"></i><input type="hidden" name="item_id" id="item_id" value=""></span></td>

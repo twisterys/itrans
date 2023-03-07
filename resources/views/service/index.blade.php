@@ -36,9 +36,8 @@
                     <table id="datatable-buttons" class="table table-bordered data-table" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
-                            <th>Prestation</th>
-                            <th>Prix</th>
-                            <th>Commentaire</th>
+                            <th>nom</th>
+                            <th>Active</th>
                             <th>&nbsp;</th>
                         </tr>
                         </thead>
@@ -63,9 +62,8 @@
                 serverSide: true,
                 ajax: "{{ route('service.index') }}",
                 columns: [
-                    {data: 'service', name: 'service'},
-                    {data: 'service_price', name: 'service_price'},
-                    {data: 'service_comment', name: 'service_comment'},
+                    {data: 'name', name: 'name'},
+                    {data: 'active', name: 'active'},
                     {data: 'actions', name: 'actions', orderable: false, searchable: false},
                 ],
                 orderCellsTop: true,

@@ -14,10 +14,18 @@ class Magasinage extends Model implements HasMedia
     use Notifiable,SoftDeletes;
     use InteractsWithMedia;
 
-    protected $fillable = ['id','date_entree','date_sortie','mat_entree','mat_sortie','depot_id','prix','user_id','num_bon','client_id'];
+    protected $fillable = ['id','date_entree','date_sortie','mat_entree','mat_sortie','depot_id','prix','user_id','num_bon','client_id','gross_weight','net_weight','number','packaging_id'];
 
     public function depot(){
         return $this->belongsTo(Depot::class);
+    }
+
+    public function packaging(){
+        return $this->belongsTo(TypePackaging::class);
+    }
+
+    public function service(){
+        return $this->belongsToMany(Service::class,'magasinage_services');
     }
 
     public function registerMediaConversions(Media $media = null): void
@@ -39,5 +47,5 @@ class Magasinage extends Model implements HasMedia
         return $this->belongsTo(Client::class);
     }
 
-   
+
 }

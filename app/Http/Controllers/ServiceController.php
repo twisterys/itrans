@@ -35,14 +35,13 @@ class ServiceController extends Controller
             $table->editColumn('id', function ($row) {
                 return $row->id ? $row->id : '';
             });
-            $table->editColumn('service', function ($row) {
-                return $row->service ? $row->service : '';
+            $table->editColumn('name', function ($row) {
+                return $row->name ? $row->name : '';
             });
-            $table->editColumn('service_price', function ($row) {
-                return $row->service_price ? $row->service_price : '';
-            });
-            $table->editColumn('service_comment', function($row){
-                return $row->service_comment ? $row->service_comment: '';
+            $table->editColumn('active', function ($row) {
+
+                $active=$row->active;
+                return view('partials.check',compact('active'));
             });
 
             $table->rawColumns(['actions', 'placeholder']);

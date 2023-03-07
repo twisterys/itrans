@@ -11,9 +11,9 @@ class Service extends Model
     use Notifiable;
     use SoftDeletes;
 
-    protected $fillable = ['service','service_price','service_comment'];
+    protected $fillable = ['name','active'];
 
     public function magasinages(){
-        return $this->hasMany(Magasinage::class);
+        return $this->belongsToMany(Magasinage::class,"megasinage_services");
     }
 }

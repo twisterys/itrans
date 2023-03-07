@@ -10,9 +10,9 @@
 
 
     <style>
-        
+
     </style>
-    
+
 
 @endsection
 
@@ -39,11 +39,11 @@
                                                         <select name="fraisMaroc" class="select2 form-control select2-multiple "  id="e1" data-placeholder="Choisir ...">
                                                                 <option value=""></option>
                                                                 @foreach ($freeTypeFrais as $freeTypeFrai)
-                                                                   
+
                                                                     <option value="{{$freeTypeFrai->id}}" {{ in_array($freeTypeFrai->id, old('fraisMaroc', [])) || ($generalMarocFrais ? $generalMarocFrais->id == $freeTypeFrai->general_frais_id : null) ? 'selected' : '' }}>{{$freeTypeFrai->name}}</option>
-                                                                    
+
                                                                 @endforeach
-                                                        
+
                                                         </select>
                                             </div>
                                         </div>
@@ -53,9 +53,9 @@
                                                         <select name="fraisEtranger" class="select2 form-control select2-multiple "  id="e2" data-placeholder="Choisir ...">
                                                                 <option value=""></option>
                                                                 @foreach ($freeTypeFrais as $freeTypeFrai)
-                                                                    
+
                                                                     <option value="{{$freeTypeFrai->id}}" {{ in_array($freeTypeFrai->id, old('fraisEtranger', [])) || ($generalEtrangerFrais ? $generalEtrangerFrais->id == $freeTypeFrai->general_frais_id : null) ? 'selected' : '' }}>{{$freeTypeFrai->name}}</option>
-                                                                    
+
                                                                 @endforeach
                                                         </select>
                                             </div>
@@ -63,8 +63,8 @@
                                     </div>
                                     <button class="btn btn-info float-right mt-3">Affecter</button>
                                 </form>
-                                        
-                                    
+
+
                                 </div>
                             </div>
                         </div>

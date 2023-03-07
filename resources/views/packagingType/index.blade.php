@@ -35,6 +35,7 @@
                         <thead>
                         <tr>
                             <th>nom</th>
+                            <th>Active</th>
                             <th>&nbsp;</th>
                         </tr>
                         </thead>
@@ -60,6 +61,7 @@
                 ajax: "{{ route('TypePackaging.index') }}",
                 columns: [
                     {data: 'name', name: 'name'},
+                    {data: 'active', name: 'active'},
                     {data: 'actions', name: 'actions', orderable: false, searchable: false},
                 ],
                 orderCellsTop: true,

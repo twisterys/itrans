@@ -17,7 +17,6 @@
          @slot('li_1') Tables  @endslot
      @endcomponent
 
-
      <div class="row">
 
         <div class="col-lg-12">
@@ -39,60 +38,64 @@
                                 <tbody>
                                     <tr>
                                         <th>
-
+                                                Client
                                         </th>
                                         <td>
-
+                                                {{$magasinage->client->nom ?? ''}}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-
+                                            Date Entrée
                                         </th>
                                         <td>
-
+                                            {{$magasinage->date_entree?? ''}}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-
+                                            Date Sortie
                                         </th>
                                         <td>
-
+                                            {{$magasinage->date_sortie?? ''}}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-
+                                            Matricule Entrée
                                         </th>
                                         <td>
-
+                                            {{$magasinage->mat_entree?? ''}}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-
+                                            Matricule Sortie
                                         </th>
                                         <td>
-
+                                            {{$magasinage->mat_sortie?? ''}}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-
+                                            Fichier
                                         </th>
                                         <td>
-
+                                            <ul>
+                                                @forelse ($magasinage->magasinage_file as $key => $media)
+                                                    <li>
+                                                        <a href="{{ $media->getUrl() }}" target="_blank"><img src="https://i.ibb.co/m6m7hXh/pdf.png" width="30px">
+                                                            {{ $media->name ?? ''  }}
+                                                        </a>
+                                                    </li>
+                                                @empty
+                                            </ul>
+                                            Y'a pas de fichier
+                                            @endforelse
+                                            </ul>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <th>
 
-                                        </th>
-                                        <td>
-
-                                        </td>
-                                    </tr>
 
                                 </tbody>
                             </table>
@@ -103,82 +106,71 @@
 
                                     <tr>
                                         <th>
-
+                                            Depot
                                         </th>
                                         <td>
-
+                                            {{$magasinage->depot->nom?? ''}}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-
+                                            Poids Brute
                                         </th>
                                         <td>
-
+                                            {{$magasinage->gross_weight?? ''}}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-
+                                            Poids Net
                                         </th>
                                         <td>
-
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <th>
-
-                                        </th>
-                                        <td>
-
+                                            {{$magasinage->net_weight?? ''}}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-
+                                            Emballage
                                         </th>
                                         <td>
-
+                                            {{$magasinage->packaging->name?? ''}}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-
+                                            Nombre
                                         </th>
                                         <td>
-
+                                            {{$magasinage->number?? ''}}
                                         </td>
                                     </tr>
+
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <div class="col-md-12">
+                            <h4>Prestations</h4>
+                            <table class=" table table-bordered table-striped table-hover">
+                                <thead class="text-white bg-dark">
+                                <tr>
+                                    <th>Prestation</th>
+                                    <th>Prix</th>
+                                    <th>Commentaire</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($magasinageServices as $key => $service)
                                     <tr>
-                                        <th>
-
-                                        </th>
-                                        <td>
-
-                                        </td>
+                                        <td>{{$service->service->name ?? '' }}</td>
+                                        <td>{{$service->price ?? '' }}</td>
+                                        <td>{{$service->comment ?? '' }}</td>
                                     </tr>
-
-
-                                    <tr>
-                                        <th>
-                                            Fichier
-                                        </th>
-                                        <td>
-                                            <ul>
-                                                @forelse ($magasinage->magasinage_file as $key => $media)
-                                                    <li>
-                                                            <a href="{{ $media->getUrl() }}" target="_blank"><img src="https://i.ibb.co/m6m7hXh/pdf.png" width="30px">
-                                                            {{ $media->name ?? ''  }}
-                                                            </a>
-                                                    </li>
-                                                @empty
-                                            </ul>
-                                                    Y'a pas de fichier
-                                                @endforelse
-                                            </ul>
-                                        </td>
-                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
 

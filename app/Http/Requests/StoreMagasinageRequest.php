@@ -30,9 +30,11 @@ class StoreMagasinageRequest extends FormRequest
             'mat_entree'    => 'required',
             'mat_sortie'    => '',
             'depot_id'  => 'required',
-            'prix'  => 'required',
             'user_id' => 'required',
-            'num_bon' => 'required',
+            //'num_bon' => 'required',
+            'gross_weight' => '',
+            'net_weight' =>'',
+            'number'=>'',
 
         ];
     }

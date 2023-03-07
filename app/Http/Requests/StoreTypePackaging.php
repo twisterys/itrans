@@ -25,6 +25,7 @@ class StoreTypePackaging extends FormRequest
     {
         return [
             'name' => 'required',
+            'active' => 'boolean',
         ];
     }
 }

@@ -1,44 +1,34 @@
 <div class="row">
-    <div class="col-4">
-        <div class="form-group row">
-            <label for="example-text-input" class="col-md-3 col-form-label">Prestation<span>(<i style="font-size: 6px;" class="fas fa-asterisk text-danger"></i>)</span></label>
-            <div class="col-md-9">
-                <input class="form-control {{ $errors->has('service') ? 'is-invalid' : '' }}" name="service" type="text" value="{{old('service',$service ? $service->service : '')}}" id="example-text-input">
-                @if($errors->has('service'))
-                <div class="invalid-feedback">
-                    {{ $errors->first('service') }}
-                </div>
+    <div class="col-5">
+        <div class="form-group row ">
+            <label for="example-text-input" class="col-md-2 col-form-label">Nom<span>(<i style="font-size: 6px;" class="fas fa-asterisk text-danger"></i>)</span></label>
+            <div class="col-md-8">
+                <input class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" name="name"  type="text" value="{{old('name',$service ? $service->name : '')}}" id="example-text-input">
+                @if($errors->has('name'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('name') }}
+                    </div>
                 @endif
             </div>
         </div>
     </div>
-    <div class="col-4">
-        <div class="form-group row">
-            <label for="example-text-input" class="col-md-3 col-form-label">prix<span>(<i style="font-size: 6px;" class="fas fa-asterisk text-danger"></i>)</span></label>
-            <div class="col-md-9">
-                <input class="form-control {{ $errors->has('service_price') ? 'is-invalid' : '' }}" name="service_price" type="text" value="{{old('service_price',$service ? $service->service_price : '')}}" id="example-text-input">
-                @if($errors->has('service_price'))
-                <div class="invalid-feedback">
-                    {{ $errors->first('service_price') }}
+    <div class="col-5">
+        <div class="">
+            <div class="row custom-radio">
+                <label for="example-text-input" class="col-md-2 col-form-label">Active</label>
+                <div class="col-2 mt-2">
+                    <input type="radio" id="customRadio1" value=0 {{ old('active',$service ? $service->active : 0) == 0 ? 'checked' : '' }} name="active" class="custom-control-input"   checked>
+                    <label class="custom-control-label" for="customRadio1">Non</label>
                 </div>
-                @endif
+                <div class="col-2 mt-2">
+                    <input type="radio" id="customRadio2" value=1 name="active" class="custom-control-input" {{ old('active',$service ? $service->active : 0) == 1 ? 'checked' : '' }}>
+                    <label class="custom-control-label" for="customRadio2">Oui</label>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-4">
-        <div class="form-group row">
-            <label for="example-text-input" class="col-md-3 col-form-label">Commentaire<span>(<i style="font-size: 6px;" class="fas fa-asterisk text-danger"></i>)</span></label>
-            <div class="col-md-9">
-                <input class="form-control {{ $errors->has('service_comment') ? 'is-invalid' : '' }}" name="service_comment" type="text" value="{{old('service_comment',$service ? $service->service_comment : '')}}" id="example-text-input">
-                @if($errors->has('service_comment'))
-                <div class="invalid-feedback">
-                    {{ $errors->first('service_comment') }}
-                </div>
-                @endif
-            </div>
-        </div>
+    <div class="col-2">
+        <button class="btn btn-info">{{$slot}}</button>
     </div>
-</div>
-<div class="mt-3 float-right">
-    <button type="submit" class="btn btn-info">{{$slot}}</button>
+
 </div>

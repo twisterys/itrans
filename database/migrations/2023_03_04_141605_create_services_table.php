@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTypePackaging extends Migration
+class CreateServicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateTypePackaging extends Migration
      */
     public function up()
     {
-        Schema::create('type_packagings', function (Blueprint $table) {
+        Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->timestamps();
+            $table->boolean('active')->default(0);
             $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -28,6 +29,6 @@ class CreateTypePackaging extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('type_packaging');
+        Schema::dropIfExists('services');
     }
 }

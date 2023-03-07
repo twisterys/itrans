@@ -11,7 +11,7 @@ class TypePackaging extends Model
     use Notifiable;
     use SoftDeletes;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name','active'];
 
     public function magasinages(){
         return $this->hasMany(Magasinage::class);

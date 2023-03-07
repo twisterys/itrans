@@ -8,11 +8,18 @@ use App\DossierPlomos;
 use App\Http\Requests\StoreMagasinageRequest;
 use App\Magasinage;
 use App\MagasinagePlomos;
+use App\MagasinageServices;
 use App\Plomo;
+use App\Service;
+use App\TypePackaging;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Yajra\DataTables\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+use PDF;
+
 
 class MagasinageController extends Controller
 {
@@ -33,19 +40,21 @@ class MagasinageController extends Controller
             $user = auth()->user();
             $data = $user->magasinages()->get();
         }
-       
+
         if ($request->ajax()) {
-        
-        
+
+
         $table = Datatables::of($data);
 
         $table->addColumn('placeholder', '&nbsp;');
         $table->addColumn('actions', '&nbsp;');
 
         $table->editColumn('actions', function ($row) {
+            $showLink = route('magasinage.show',$row->id);
             $editLink = route('magasinage.edit',$row->id);
             $deleteLink = 'deleteMagasinage('.$row->id.')';
-            return view('partials.magasinageActions',compact('editLink','deleteLink'));
+            $downloadLink = route('magasinage.download',$row->id);
+            return view('partials.magasinageActions',compact('editLink','deleteLink','showLink','downloadLink'));
 
             //$btn = '<a href="'.$editLink.'" class="btn btn-warning btn-sm mr-1">Modifier</a>';
             //$btn .= '<button onclick="deleteMagasinage('.$row->id.')" class="btn btn-danger btn-sm mr-1">Supprimer</button>';
@@ -97,10 +106,12 @@ class MagasinageController extends Controller
         $this->authorize('create',Magasinage::class);
 
         $clients = Client::all();
-        
+
         $plomos = Plomo::where('used_at',null)->where('defaillante',0)->where('traiter_a',NULL)->get();
         $depots = Depot::all();
-        return view('magasinage.create',compact('depots','plomos','clients'));
+        $packages = TypePackaging::all();
+        $services = Service::all();
+        return view('magasinage.create',compact('depots','plomos','clients','services','packages'));
     }
 
     /**
@@ -111,20 +122,53 @@ class MagasinageController extends Controller
      */
     public function store(StoreMagasinageRequest $request)
     {
-        $this->authorize('create',Magasinage::class);   
-        
+        $this->authorize('create',Magasinage::class);
+
+
+        $total_price = 0;
+        if($request->price && $request->service_id ) {
+            $service_id = $request->service_id;
+            $price = $request->price;
+            for ($i = 0; $i < count($service_id); $i++) {
+                if (Service::where('id', $service_id[$i])->exists() && $price[$i] != null) {
+                    $total_price += $price[$i];
+                }
+            }
+        }
+
+        $request->merge(['prix' => $total_price]);
         $magasinage = Magasinage::create($request->all());
-        if($request->plomos){
+
+        /* if($request->plomos){
             foreach ($request->plomos as $plomo) {
                 $plomos = Plomo::findOrFail($plomo);
                 $plomos->update([
                      'used_at' => Carbon::now(),
                      'havePlomos_type' => 'App\Magasinage',
-                     'havePlomos_id' => $magasinage->id 
+                     'havePlomos_id' => $magasinage->id
                 ]);
             }
+        } */
+
+        if($request->price && $request->service_id){
+
+            $price = $request->price;
+            $comment = $request->comment;
+            $service_id = $request->service_id;
+
+
+            for ($i=0; $i <count($service_id) ; $i++) {
+                if(Service::where('id',$service_id[$i])->exists() && $price[$i]!=null ){
+                    MagasinageServices::create([
+                        'magasinage_id' => $magasinage->id,
+                        'service_id' => $service_id[$i],
+                        'price'=> $price[$i],
+                        'comment'=> $comment[$i]??null,
+                    ]);
+                }
+            }
         }
-        
+
         foreach ($request->input('file', []) as $file) {
             $magasinage->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('magasinage_file');
         }
@@ -139,9 +183,10 @@ class MagasinageController extends Controller
      */
     public function show(Magasinage $magasinage)
     {
-        $this->authorize('show',Magasinage::class);
+        //$this->authorize('show',Magasinage::class);
         $magasinage->load('depot');
-        return view('magasinage.show',compact('magasinage'));
+        $magasinageServices = MagasinageServices::with('service')->where('magasinage_id',$magasinage->id)->get();
+        return view('magasinage.show',compact('magasinage','magasinageServices'));
     }
 
     /**
@@ -159,10 +204,13 @@ class MagasinageController extends Controller
         $magasinagePlomos = $magasinage->plomos()->get();
         $plomos = $magasinagePlomos->merge($plomosNotUsed);
         $magasinage->load('client');
-
+        $magasinageServices = MagasinageServices::with('service')->where('magasinage_id',$magasinage->id)->get();
+        $packages = TypePackaging::all();
+        $services = Service::all();
+        $magasinageService = MagasinageServices::all();
         //return $plomos;
         $depots = Depot::all();
-        return view('magasinage.edit',compact('magasinage','depots','plomos','clients'));
+        return view('magasinage.edit',compact('magasinage','depots','plomos','clients','services','packages','magasinageServices','magasinageService'));
     }
 
     /**
@@ -174,20 +222,77 @@ class MagasinageController extends Controller
      */
     public function update(StoreMagasinageRequest $request, Magasinage $magasinage)
     {
+
         //return $request->num_bon;
         $this->authorize('update',Magasinage::class);
+
+        $total_price = 0;
+        if($request->price && $request->services ) {
+            $service_id = $request->services;
+            $price = $request->price;
+            for ($i = 0; $i < count($service_id); $i++) {
+                if (Service::where('id', $service_id[$i])->exists() && $price[$i] != null) {
+                    $total_price += $price[$i];
+                }
+            }
+        }
+
+        $request->merge(['prix' => $total_price]);
+
         $magasinage->update($request->all());
+
+
+        if($request->price && $request->services){
+
+
+            $price = $request->price;
+            $comment = $request->comment;
+            $service_id = $request->services;
+
+            for ($i = 0; $i < count($service_id); $i++) {
+                if (Service::where('id', $service_id[$i])->exists() && $price[$i] != null) {
+                    $magasinageServices = MagasinageServices::where('magasinage_id', $magasinage->id)->get();
+
+
+                    if ($magasinageServices->isEmpty()) {
+                        MagasinageServices::create([
+                            'magasinage_id' => $magasinage->id,
+                            'service_id' => $service_id[$i],
+                            'price' => $price[$i],
+                            'comment' => $comment[$i] ?? null,
+                        ]);
+                    } else {
+                        $magasinageService = $magasinageServices[$i] ?? null;
+                        if ($magasinageService) {
+                            $magasinageService->update([
+                                'service_id' => $service_id[$i],
+                                'price' => $price[$i],
+                                'comment' => $comment[$i] ?? null,
+                            ]);
+                        } else {
+                            MagasinageServices::create([
+                                'magasinage_id' => $magasinage->id,
+                                'service_id' => $service_id[$i],
+                                'price' => $price[$i],
+                                'comment' => $comment[$i] ?? null,
+                            ]);
+                        }
+                }}
+            }
+
+        }
+
         if($request->plomos){
 
             foreach ($request->plomos as $plomo) {
                 if(!$magasinage->plomos->contains($plomo)){
-                    $plomos = Plomo::findOrFail($plomo); 
+                    $plomos = Plomo::findOrFail($plomo);
                     $plomos->update([
                         'used_at' => Carbon::now(),
                         'havePlomos_type' => 'App\Magasinage',
-                        'havePlomos_id' => $magasinage->id 
+                        'havePlomos_id' => $magasinage->id
                    ]);
-                  
+
                 }
             }
             $magasinage->plomos()->whereNotIn('id',$request->plomos)->update([
@@ -280,5 +385,21 @@ class MagasinageController extends Controller
             'name'          => $name,
             'original_name' => $file->getClientOriginalName(),
         ]);
+    }
+
+    public function download(Magasinage $magasinage){
+
+        $pdf = FacadePdf::loadView('magasinage.download', ['magasinage' => $magasinage]);
+        return $pdf->download('dossier_'.$magasinage->id.'.pdf');
+
+
+    }
+
+
+    public function showPublic($id){
+
+        $magasinage=Magasinage::find($id);
+        $magasinageServices = MagasinageServices::with('service')->where('magasinage_id',$magasinage->id)->get();
+        return view('magasinage.showPublic',compact('magasinage','magasinageServices'));
     }
 }

@@ -29,7 +29,6 @@ class TypePackagingController extends Controller
                 $editLink = route('TypePackaging.edit',$row->id);
                 $btn = '<a href="'.$editLink.'" class="btn btn-warning btn-sm mr-1">Modifier</a>';
                 $btn .= '<button onclick="deleteTypePackaging('.$row->id.')" class="btn btn-danger btn-sm mr-1">Supprimer</button>';
-
                 return $btn;
             });
 
@@ -38,6 +37,11 @@ class TypePackagingController extends Controller
             });
             $table->editColumn('name', function ($row) {
                 return $row->name ? $row->name : '';
+            });
+            $table->editColumn('active', function ($row) {
+                if($row->active)
+                    return '<i class="dripicons-checkmark"></i>';
+                return '<i class="dripicons-wrong"></i>';
             });
 
             $table->rawColumns(['active','actions', 'placeholder']);

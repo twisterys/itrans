@@ -221,7 +221,6 @@ class ImportController extends Controller
     {
         $this->authorize('create',Dossier::class);
 
-
         $import = Dossier::create($request->all());
         $import->type='import';
         $import->save();

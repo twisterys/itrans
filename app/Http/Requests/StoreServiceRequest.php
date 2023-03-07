@@ -24,9 +24,8 @@ class StoreServiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'service' => 'required',
-            'service_price' => 'required',
-            'service_comment' => 'nullable',
+            'name' => 'required',
+            'active' => 'boolean',
         ];
     }
 }

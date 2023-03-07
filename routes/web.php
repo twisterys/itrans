@@ -27,6 +27,7 @@ Auth::routes();
 Route::redirect('index','home');
 Route::view('expiration', 'expiration')->name('expiration');
 
+Route::get('/afficherPublic/{id}', 'MagasinageController@showPublic');
 
 
 // You can also use auth middleware to prevent unauthenticated users
@@ -131,6 +132,10 @@ Route::group(['middleware' => ['auth'] ], function () {
     //Magasinage
     Route::resource('magasinage','MagasinageController');
     Route::post('magasinage/media', 'MagasinageController@storeMedia')->name('magasinage.storeMedia');
+
+
+
+    Route::get('magasinage/download/{magasinage}','MagasinageController@download')->name('magasinage.download');
 
 
 

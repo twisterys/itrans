@@ -163,7 +163,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
-        \sbamtr\LaravelSourceEncrypter\SourceEncryptServiceProvider::class,
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
 
         Spatie\Permission\PermissionServiceProvider::class,
 
@@ -240,6 +240,7 @@ return [
         'Debugbar' => Barryvdh\Debugbar\Facades\Debugbar::class,
         "PDF" => Barryvdh\DomPDF\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
 
         //'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         //'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
