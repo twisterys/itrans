@@ -34,12 +34,11 @@ class MagasinageController extends Controller
         $this->authorize('viewAny',Magasinage::class);
         $data = null;
 
-        if(auth()->user()->is_admin){
+
             $data = Magasinage::with(['client','depot:id,nom,ville'])->get();
-        }else{
-            $user = auth()->user();
-            $data = $user->magasinages()->get();
-        }
+
+
+
 
         if ($request->ajax()) {
 
